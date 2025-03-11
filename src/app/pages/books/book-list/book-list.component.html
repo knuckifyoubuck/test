@@ -143,8 +143,8 @@
       </ng-container>
     
       <tr mat-header-row *matHeaderRowDef="bookColumns; sticky: true"></tr>
-      <tr mat-row [ngClass]="{'cursor-pointer hover:bg-[#e0e0ff]': editMode() !== book.id}" (click)="openBook(book); $event.stopImmediatePropagation()" *matRowDef="let book; columns: bookColumns;"></tr>
-      <tr class="mat-row text-center" *matNoDataRow>
+      <tr mat-row @fadeInOut [ngClass]="{'cursor-pointer hover:bg-[#e0e0ff]': editMode() !== book.id}" (click)="openBook(book); $event.stopImmediatePropagation()" *matRowDef="let book; columns: bookColumns;"></tr>
+      <tr class="mat-row text-center" *matNoDataRow @fadeInOut>
         <td class="mat-cell" colspan="6">No books</td>
       </tr>
     </table>

@@ -17,7 +17,7 @@ import { BookDialogDeleteOnClose } from '../../../core/interfaces/book-dialog-da
 import { YearPipe } from "../../../core/pipes/year.pipe";
 import { BookListService } from '../../../core/services/book-list.service'
 import { DialogService } from '../../../core/services/dialog.service'
-import { rowAddDelete } from '../../../core/utils/animations'
+import { fadeInOut } from '../../../core/utils/animations'
 
 @Component({
   selector: 'app-book-list',
@@ -25,7 +25,7 @@ import { rowAddDelete } from '../../../core/utils/animations'
   imports: [MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatTooltipModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatRippleModule, NgClass, YearPipe],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss',
-  animations: [rowAddDelete],
+  animations: [fadeInOut],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookListComponent {

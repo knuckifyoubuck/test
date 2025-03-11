@@ -1,6 +1,6 @@
 import { animate, style, transition, trigger } from "@angular/animations"
 
-export const rowAddDelete = trigger('fadeOut', [
+export const fadeInOut = trigger('fadeInOut', [
   transition(':leave', [
     style({
       opacity: '1'
