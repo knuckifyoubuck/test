@@ -7,7 +7,7 @@ import { RouterOutlet } from '@angular/router'
   imports: [RouterOutlet],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class HomePage {
   title = 'Shchanniko Hryhorii'

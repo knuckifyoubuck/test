@@ -1,14 +1,12 @@
-<h2 mat-dialog-title>{{bookDialogData.mode === 'add' ? 'Add Book' : 'Book Info'}}</h2>
+<h2 mat-dialog-title>{{ bookDialogData.mode === 'add' ? 'Add Book' : 'Book Info' }}</h2>
 @if (bookDialogData.mode === 'edit') {
   <div class="absolute top-6 right-6 flex gap-4">
-    <mat-slide-toggle labelPosition="before" [checked]="!readonlyMode()" (change)="editModeChange($event)">Edit mode</mat-slide-toggle>
+    <mat-slide-toggle labelPosition="before" [checked]="!readonlyMode()" (change)="editModeChange($event)">
+      Edit mode
+    </mat-slide-toggle>
   </div>
   <div class="z-10 absolute bottom-6 left-6 flex gap-4">
-    <button
-      mat-mini-fab
-      aria-label="Delete Book"
-      matTooltip="Delete Book" 
-      [mat-dialog-close]="deleteBook()">
+    <button mat-mini-fab aria-label="Delete Book" matTooltip="Delete Book" [mat-dialog-close]="deleteBook()">
       <mat-icon fontIcon="delete"></mat-icon>
     </button>
   </div>
@@ -24,7 +22,7 @@
           <mat-error>{{ 'Field is required' }}</mat-error>
         }
       </mat-form-field>
-    
+
       <mat-form-field>
         <mat-label>Author</mat-label>
         <input matInput formControlName="author" [readonly]="readonlyMode()" required />
@@ -32,7 +30,7 @@
           <mat-error>{{ 'Field is required' }}</mat-error>
         }
       </mat-form-field>
-      
+
       <mat-form-field>
         <mat-label>Publication Year</mat-label>
         <input matInput type="number" formControlName="publicationYear" [readonly]="readonlyMode()" required />
@@ -40,7 +38,7 @@
           <mat-error>{{ 'Field is required or invalid' }}</mat-error>
         }
       </mat-form-field>
-    
+
       <mat-form-field>
         <mat-label>Publication Place</mat-label>
         <input matInput formControlName="publicationPlace" [readonly]="readonlyMode()" required />
@@ -48,19 +46,23 @@
           <mat-error>{{ 'Field is required' }}</mat-error>
         }
       </mat-form-field>
-    
+
       <mat-form-field>
         <mat-label>Pages</mat-label>
         <input matInput type="number" formControlName="pages" [readonly]="readonlyMode()" required />
         @if (bookForm.controls.pages.errors?.required) {
           <mat-error>{{ 'Field is required or invalid' }}</mat-error>
-        } @else if(bookForm.controls.pages.errors?.min) {
+        } @else if (bookForm.controls.pages.errors?.min) {
           <mat-error>{{ 'Must be at least 1 page' }}</mat-error>
         }
       </mat-form-field>
-    
+
       <div class="upload-form-wrapper">
-        <app-upload-file-form formControlName="imageSrc" (imageLoaded)="onImageLoaded($event)" (imageLoading)="onImageLoading($event)" />
+        <app-upload-file-form
+          formControlName="imageSrc"
+          (imageLoaded)="onImageLoaded($event)"
+          (imageLoading)="onImageLoading($event)"
+        />
       </div>
     </form>
 
@@ -68,7 +70,7 @@
       <div class="w-[400px] h-[400px] rounder-s outline-2 outline-dashed outline-[#e0e0ff]">
         <div class="relative h-full flex justify-center items-center color-[#e0e0ff]">
           @if (imageSrc()) {
-            <img class="object-contain w-full h-full" [src]="imageSrc()" alt="Book image">
+            <img class="object-contain w-full h-full" [src]="imageSrc()" alt="Book image" />
           } @else {
             <mat-icon fontIcon="image"></mat-icon>
             Download your image

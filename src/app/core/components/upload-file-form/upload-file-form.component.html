@@ -3,12 +3,7 @@
 <div class="flex gap-4 items-center p-4">
   {{ imageSrc ? 'Image loaded' : 'Image not loaded' }}
 
-  <button
-    type="button"
-    [disabled]="isDisabled()"
-    mat-mini-fab
-    color="primary"
-    (click)="fileUpload.click()">
+  <button type="button" [disabled]="isDisabled()" mat-mini-fab color="primary" (click)="fileUpload.click()">
     <mat-icon>attach_file</mat-icon>
   </button>
 </div>

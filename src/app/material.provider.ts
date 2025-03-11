@@ -52,8 +52,8 @@ export const provideMaterialConfig = (): Provider[] => {
     {
       provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
       useValue: {
-        position: 'above'
-      }
+        position: 'above',
+      },
     },
 
     { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
