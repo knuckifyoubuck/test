@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table'
 
 import { BOOK_DATA } from '../consts/book-data'
 
@@ -6,5 +7,5 @@ import { BOOK_DATA } from '../consts/book-data'
   providedIn: 'root'
 })
 export class BookListService {
-  bookList = signal(BOOK_DATA);
+  bookListSource = new MatTableDataSource(BOOK_DATA);
 }

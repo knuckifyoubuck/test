@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common'
 import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatRippleModule } from '@angular/material/core'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -28,27 +29,41 @@ import { rowAddDelete } from '../../../core/utils/animations'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookListComponent {
-  bookListService = inject(BookListService);
+  bookListSource = inject(BookListService).bookListSource;
   private formBuilder = inject(FormBuilder);
   private dialogService = inject(DialogService);
-
+  
   editForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required]],
     author: ['', [Validators.required]],
-    publicationYear: ['', [Validators.required]],
+    publicationYear: new FormControl<number | null>(null, Validators.required),
     publicationPlace: ['', [Validators.required]],
-    pages: ['', [Validators.required, Validators.min(1)]]
-  });
+    pages: new FormControl<number | null>(null, [Validators.required, Validators.min(1)])
+  })
+  
+  searchForm = new FormControl('', {nonNullable: true});
 
   bookColumns = BOOK_COLUMNS;
   editMode: WritableSignal<string | null> = signal('');
+
+  constructor() {
+    this.bookListSource.filterPredicate = function(data, filter: string): boolean {
+      return data.name.toLowerCase().includes(filter.toLowerCase()) || data.author.toLowerCase().includes(filter.toLowerCase());
+    };
+
+    this.searchForm.valueChanges.pipe(
+      takeUntilDestroyed()
+    ).subscribe((searchValue) => {
+      this.bookListSource.filter = searchValue;
+    })
+  }
 
   addBook() {
     const addBookRef = this.dialogService.openBookDialog();
 
     addBookRef.afterClosed().subscribe((newBook?: Book) => {
       if (newBook) {
-        this.bookListService.bookList.update((books) => [newBook, ...books]);
+        this.bookListSource.data = [newBook, ...this.bookListSource.data]
       }
     });
   }
@@ -64,7 +79,7 @@ export class BookListComponent {
               this.deleteBook(book.id);            
             }
           } else {
-            this.bookListService.bookList.update((books) => books.map((book) => {
+            this.bookListSource.data = this.bookListSource.data.map((book) => {
               if (book.id === changedBook.id) {
                 return ({
                   id: book.id,
@@ -78,7 +93,7 @@ export class BookListComponent {
               } else {
                 return book;
               }
-            }));
+            });
           }
         }
       });
@@ -86,7 +101,7 @@ export class BookListComponent {
   }
 
   deleteBook(id: string) {
-    this.bookListService.bookList.update((books) => books.filter(book => book.id !== id));
+    this.bookListSource.data = this.bookListSource.data.filter(book => book.id !== id);
   }
   
   editBook(book: Book) {
@@ -94,14 +109,14 @@ export class BookListComponent {
     this.editForm.setValue({
       name: book.name,
       author: book.author,
-      publicationYear: String(book.publicationYear),
+      publicationYear: book.publicationYear,
       publicationPlace: book.publicationPlace,
-      pages: String(book.pages),
-    })
+      pages: book.pages,
+    });
   }
 
   confirmEditChanges(id: string) {
-    this.bookListService.bookList.update((books) => books.map((book) => {
+    this.bookListSource.data = this.bookListSource.data.map((book) => {
       if (book.id === id) {
         return ({
           id: book.id,
@@ -114,7 +129,7 @@ export class BookListComponent {
       } else {
         return book;
       }
-    }));
+    });
     
     this.editMode.set(null);
   }
