@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 
 @Component({
@@ -7,9 +7,10 @@ import { RouterOutlet } from '@angular/router'
   imports: [RouterOutlet],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class HomePage {
-  title = 'candidate'
+  title = 'Shchanniko Hryhorii'
 
   links = [
     { title: 'Explore the Docs', link: 'https://angular.dev' },

@@ -6,6 +6,7 @@ import { MAT_PAGINATOR_DEFAULT_OPTIONS } from '@angular/material/paginator'
 import { MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio'
 import { MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS } from '@angular/material/slide-toggle'
 import { MAT_TABS_CONFIG } from '@angular/material/tabs'
+import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip'
 import {
   LuxonDateAdapter,
   MAT_LUXON_DATE_ADAPTER_OPTIONS,
@@ -47,6 +48,12 @@ export const provideMaterialConfig = (): Provider[] => {
         hideRequiredMarker: true,
         floatLabel: 'auto',
       },
+    },
+    {
+      provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+      useValue: {
+        position: 'above'
+      }
     },
 
     { provide: MAT_DATE_LOCALE, useValue: 'en-US' },

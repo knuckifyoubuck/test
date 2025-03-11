@@ -1,0 +1,144 @@
+<div class="flex w-full gap-5">
+  <div class="flex flex-col gap-4 py-4">
+    <button mat-fab extended (click)="addBook()">
+      <mat-icon aria-label="Add Book" fontIcon="add_circle"> </mat-icon>
+      <span>Add Book</span>
+    </button>
+  </div>
+
+  <div class="w-full h-screen overflow-y-auto p-4">
+    <table mat-table [dataSource]="bookListService.bookList()" class="mat-elevation-z8">
+      <ng-container [formGroup]="editForm">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let book">
+            @if (editMode() === book.id) {
+              <mat-form-field class="my-4 w-full" subscriptSizing="dynamic">
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="Name" formControlName="name" [value]="book.name">
+                @if (editForm.controls.name.errors?.required) {
+                  <mat-error>{{ 'Field is required' }}</mat-error>
+                }
+              </mat-form-field>
+            } @else {
+              {{ book.name }}
+            }
+          </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="author">
+          <th mat-header-cell *matHeaderCellDef>Author</th>
+          <td mat-cell *matCellDef="let book">
+            @if (editMode() === book.id) {
+              <mat-form-field class="my-4 w-full" subscriptSizing="dynamic">
+                <mat-label>Author</mat-label>
+                <input matInput placeholder="Author" formControlName="author" [value]="book.author">
+                @if (editForm.controls.author.errors?.required) {
+                  <mat-error>{{ 'Field is required' }}</mat-error>
+                }
+              </mat-form-field>
+            } @else {
+              {{ book.author }}
+            }
+          </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="publicationYear">
+          <th mat-header-cell *matHeaderCellDef>Publication Year</th>
+          <td mat-cell *matCellDef="let book">
+            @if (editMode() === book.id) {
+              <mat-form-field class="my-4 w-full" subscriptSizing="dynamic">
+                <mat-label>Publication Year</mat-label>
+                <input matInput type="number" placeholder="Publication Year" formControlName="publicationYear" [value]="book.publicationYear">
+                @if (editForm.controls.publicationYear.errors?.required) {
+                  <mat-error>{{ 'Field is required or invalid' }}</mat-error>
+                }
+              </mat-form-field>
+            } @else {
+              {{ book.publicationYear | year }}
+            }
+          </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="publicationPlace">
+          <th mat-header-cell *matHeaderCellDef>Publication Place</th>
+          <td mat-cell *matCellDef="let book">
+            @if (editMode() === book.id) {
+              <mat-form-field class="my-4 w-full" subscriptSizing="dynamic">
+                <mat-label>Publication Place</mat-label>
+                <input matInput placeholder="Publication Place" formControlName="publicationPlace" [value]="book.publicationPlace">
+                @if (editForm.controls.publicationPlace.errors?.required) {
+                  <mat-error>{{ 'Field is required' }}</mat-error>
+                }
+              </mat-form-field>
+            } @else {
+              {{ book.publicationPlace }}
+            }
+          </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="pages">
+          <th mat-header-cell *matHeaderCellDef>Pages</th>
+          <td mat-cell *matCellDef="let book">
+            @if (editMode() === book.id) {
+              <mat-form-field class="my-4 w-full" subscriptSizing="dynamic">
+                <mat-label>Pages</mat-label>
+                <input matInput type="number" placeholder="Pages" formControlName="pages" [value]="book.pages">
+                @if (editForm.controls.pages.errors?.required) {
+                  <mat-error>{{ 'Field is required or invalid' }}</mat-error>
+                } @else if(editForm.controls.pages.errors?.min) {
+                  <mat-error>{{ 'Must be at least 1 page' }}</mat-error>
+                }
+              </mat-form-field>
+            } @else {
+              {{ book.pages }}
+            }
+          </td>
+        </ng-container>
+      </ng-container>
+    
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let book">
+          <div class="flex gap-4">
+            @if (editMode() === book.id) {
+              <button
+                mat-mini-fab
+                aria-label="Confirm changes"
+                matTooltip="Confirm changes"
+                [disabled]="editForm.invalid"
+                (click)="confirmEditChanges(book.id); $event.stopImmediatePropagation()">
+                <mat-icon fontIcon="check"></mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                aria-label="Cancel changes"
+                matTooltip="Cancel changes" 
+                (click)="cancelEditChanges();$event.stopImmediatePropagation()">
+                <mat-icon fontIcon="close"></mat-icon>
+              </button>
+            } @else {
+              <button
+                mat-mini-fab
+                aria-label="Edit Book"
+                matTooltip="Edit Book"
+                (click)="editBook(book); $event.stopImmediatePropagation()">
+                <mat-icon fontIcon="edit"></mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                aria-label="Delete Book"
+                matTooltip="Delete Book" 
+                (click)="deleteBook(book.id); $event.stopImmediatePropagation()">
+                <mat-icon fontIcon="delete"></mat-icon>
+              </button>
+            }
+          </div>
+        </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="bookColumns; sticky: true"></tr>
+      <tr mat-row [ngClass]="{'cursor-pointer hover:bg-[#e0e0ff]': editMode() !== book.id}" (click)="openBook(book); $event.stopImmediatePropagation()" *matRowDef="let book; columns: bookColumns;"></tr>
+    </table>
+  </div>
+</div>

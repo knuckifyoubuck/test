@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 
 @Component({
@@ -7,6 +7,7 @@ import { RouterOutlet } from '@angular/router'
   templateUrl: './other.page.html',
   styleUrl: './other.page.scss',
   imports: [RouterOutlet],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class OtherPage {
   title = 'other'
