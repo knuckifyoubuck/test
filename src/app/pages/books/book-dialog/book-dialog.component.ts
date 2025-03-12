@@ -9,7 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { MatTooltipModule } from '@angular/material/tooltip'
 
-import { UploadFileFormComponent } from '../../../core/components/upload-file-form/upload-file-form.component'
+import { UploadImageFormComponent } from '../../../core/components/upload-image-form/upload-image-form.component'
 import { Book } from '../../../core/interfaces/book.interface'
 import { BookDialogData, BookDialogDeleteOnClose } from '../../../core/interfaces/book-dialog-data'
 
@@ -23,7 +23,7 @@ import { BookDialogData, BookDialogDeleteOnClose } from '../../../core/interface
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    UploadFileFormComponent,
+    UploadImageFormComponent,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
     MatTooltipModule,

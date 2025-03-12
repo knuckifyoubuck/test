@@ -1,4 +1,4 @@
-<input type="file" class="hidden" (change)="onFileSelected($event)" #fileUpload />
+<input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" #fileUpload />
 
 <div class="flex gap-4 items-center p-4">
   {{ imageSrc ? 'Image loaded' : 'Image not loaded' }}

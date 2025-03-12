@@ -57,12 +57,15 @@
         }
       </mat-form-field>
 
-      <div class="upload-form-wrapper">
-        <app-upload-file-form
+      <div class="inline-flex items-center">
+        <app-upload-image-form
           formControlName="imageSrc"
           (imageLoaded)="onImageLoaded($event)"
           (imageLoading)="onImageLoading($event)"
         />
+        @if (bookForm.controls.imageSrc.errors?.isNotImage) {
+          <mat-error>{{ 'File must be image' }}</mat-error>
+        }
       </div>
     </form>
 

@@ -1,33 +1,40 @@
-import { ChangeDetectionStrategy, Component, forwardRef, output, signal } from '@angular/core'
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
+import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, output, signal, ViewChild } from '@angular/core'
+import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 
 @Component({
-  selector: 'app-upload-file-form',
+  selector: 'app-upload-image-form',
   standalone: true,
   imports: [MatIconModule, MatButtonModule],
-  templateUrl: './upload-file-form.component.html',
-  styleUrl: './upload-file-form.component.scss',
+  templateUrl: './upload-image-form.component.html',
+  styleUrl: './upload-image-form.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UploadFileFormComponent),
+      useExisting: forwardRef(() => UploadImageFormComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => UploadImageFormComponent),
       multi: true,
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UploadFileFormComponent implements ControlValueAccessor {
+export class UploadImageFormComponent implements ControlValueAccessor {
   onChange!: (value: unknown) => void
   onTouched!: () => void
   isDisabled = signal(false)
 
+  @ViewChild('fileInput', { static: true }) fileInput!: ElementRef
+
   imageLoaded = output<string>()
   imageLoading = output<boolean>()
 
-  imageSrc!: string
-  fileName!: string
+  imageSrc?: string
+  fileType?: string
 
   onFileSelected(event: Event) {
     if (this.isDisabled()) {
@@ -36,12 +43,14 @@ export class UploadFileFormComponent implements ControlValueAccessor {
 
     if (event.target) {
       if ((event.target as HTMLInputElement).files) {
-        this.imageLoading.emit(true)
         const file = (event.target as HTMLInputElement).files![0]
-        this.fileName = file.name
+        this.fileType = file.type
 
         const reader = new FileReader()
 
+        reader.onloadstart = () => {
+          this.imageLoading.emit(true)
+        }
         reader.onload = () => {
           this.imageSrc = reader.result as string
           this.imageLoaded.emit(this.imageSrc)
@@ -59,6 +68,8 @@ export class UploadFileFormComponent implements ControlValueAccessor {
   writeValue(imageSrc: unknown): void {
     if (typeof imageSrc === 'string') {
       this.imageSrc = imageSrc
+
+      this.fileInput.nativeElement.value = ''
     }
   }
 
@@ -72,5 +83,16 @@ export class UploadFileFormComponent implements ControlValueAccessor {
 
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled.set(isDisabled)
+  }
+
+  validate() {
+    if (this.fileType) {
+      const isNotImage = this.fileType.split('/')[0] !== 'image'
+      return (
+        isNotImage && {
+          isNotImage: true,
+        }
+      )
+    } else return null
   }
 }
