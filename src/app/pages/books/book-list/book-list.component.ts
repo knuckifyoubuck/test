@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common'
-import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal, WritableSignal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
@@ -44,6 +44,7 @@ export class BookListComponent {
   bookListSource = inject(BookListService).bookListSource
   private formBuilder = inject(FormBuilder)
   private dialogService = inject(DialogService)
+  private cdr = inject(ChangeDetectorRef)
 
   editForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required]],
@@ -92,19 +93,16 @@ export class BookListComponent {
               this.deleteBook(book.id)
             }
           } else {
-            this.bookListSource.data = this.bookListSource.data.map((book) => {
+            this.bookListSource.data.forEach((book) => {
               if (book.id === changedBook.id) {
-                return {
-                  id: book.id,
-                  name: changedBook.name,
-                  author: changedBook.author,
-                  publicationYear: changedBook.publicationYear,
-                  publicationPlace: changedBook.publicationPlace,
-                  pages: changedBook.pages,
-                  imageSrc: changedBook.imageSrc,
-                }
-              } else {
-                return book
+                book.name = changedBook.name
+                book.author = changedBook.author
+                book.publicationYear = changedBook.publicationYear
+                book.publicationPlace = changedBook.publicationPlace
+                book.pages = changedBook.pages
+                book.imageSrc = changedBook.imageSrc
+
+                this.cdr.markForCheck()
               }
             })
           }
@@ -129,18 +127,13 @@ export class BookListComponent {
   }
 
   confirmEditChanges(id: string) {
-    this.bookListSource.data = this.bookListSource.data.map((book) => {
+    this.bookListSource.data.forEach((book) => {
       if (book.id === id) {
-        return {
-          id: book.id,
-          name: this.editForm.controls.name.value as string,
-          author: this.editForm.controls.author.value as string,
-          publicationYear: Number(this.editForm.controls.publicationYear.value) as number,
-          publicationPlace: this.editForm.controls.publicationPlace.value as string,
-          pages: Number(this.editForm.controls.pages.value) as number,
-        }
-      } else {
-        return book
+        book.name = this.editForm.controls.name.value
+        book.author = this.editForm.controls.author.value
+        book.publicationYear = this.editForm.controls.publicationYear.value!
+        book.publicationPlace = this.editForm.controls.publicationPlace.value
+        book.pages = this.editForm.controls.pages.value!
       }
     })
 

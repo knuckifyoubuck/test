@@ -90,12 +90,17 @@
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Close</button>
   @if (bookDialogData.mode === 'add') {
-    <button mat-button [disabled]="bookForm.invalid && imageLoading()" [mat-dialog-close]="addBook()" cdkFocusInitial>
+    <button mat-button [disabled]="bookForm.invalid || imageLoading()" [mat-dialog-close]="addBook()" cdkFocusInitial>
       Create Book
     </button>
   } @else {
     @if (!readonlyMode()) {
-      <button mat-button [disabled]="bookForm.invalid" [mat-dialog-close]="changeBook()" cdkFocusInitial>
+      <button
+        mat-button
+        [disabled]="bookForm.invalid || imageLoading()"
+        [mat-dialog-close]="changeBook()"
+        cdkFocusInitial
+      >
         Change Book
       </button>
     }
